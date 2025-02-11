@@ -392,8 +392,8 @@ class BaseTrainer:
                 if ni - last_opt_step >= self.accumulate:
                     self.optimizer_step()
                     last_opt_step = ni
-                self.loss = self.loss.detach()  ######Jiayuan Free the GPU memory
-                torch.cuda.empty_cache()
+                #self.loss = self.loss.detach()  ######Jiayuan Free the GPU memory
+                #torch.cuda.empty_cache()
 
                 # Log
                 ######Jiayuan
