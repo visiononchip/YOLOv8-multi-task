@@ -9,4 +9,4 @@ model = YOLO('/home/jiayuan/yolom/ultralytics/models/v8/yolov8-bdd-v4-one-dropou
 # model = YOLO('yolov8n.yaml').load('yolov8n.pt')  # build from YAML and transfer weights
 
 # Train the model
-model.train(data='/home/jiayuan/yolom/ultralytics/datasets/bdd-multi.yaml', batch=12, epochs=300, imgsz=(640,640), device=[0,1,2], name='yolopm', val=True, task='multi',classes=[2,3,4,9,10,11],combine_class=[2,3,4,9],single_cls=True)
+model.train(data='/home/jiayuan/yolom/ultralytics/datasets/bdd-multi.yaml', batch=96, epochs=100, imgsz=(640,640), device=0, name='train_demo_output', val=True, task='multi',classes=[0,1,2,3,4,5,6],combine_class=[],single_cls=False, save_period=5, workers=16, resume=False)
