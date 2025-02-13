@@ -335,6 +335,41 @@ class BasePredictor:
         cv2.imshow(str(p), im0)
         cv2.waitKey(500 if self.batch[3].startswith('image') else 1)  # 1 millisecond
 
+    @staticmethod
+    def mask_to_yolo_polygon(binary_mask, output_path, class_id):
+        """
+        Convert a segmentation mask to YOLO annotations with polygons.
+
+        Args:
+            mask_path (str): Path to the segmentation mask image.
+            output_path (str): Path to save YOLO polygon annotations.
+        """
+
+        # binary_mask = mask_ # cv2.threshold(mask_, 100, 255, cv2.THRESH_BINARY)
+        height, width = binary_mask.shape
+
+        yolo_annotations = []
+
+        # Find contours for the class
+        contours, _ = cv2.findContours(binary_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        for contour in contours:
+            # Simplify the contour to four points (quadrilateral)
+            epsilon = 0.001 * cv2.arcLength(contour, True)
+            approx = cv2.approxPolyDP(contour, epsilon, True)
+
+            # Normalize the contour coordinates
+            normalized_points = [(pt[0][0] / width, pt[0][1] / height) for pt in approx]
+            flattened_points = [coord for point in normalized_points for coord in point]
+
+            # Format the annotation
+            annotation = f"{class_id} " + " ".join(f"{value:.6f}" for value in flattened_points)
+            yolo_annotations.append(annotation)
+
+        # Save to output file
+        with open(output_path, "w") as f:
+            f.write("\n".join(yolo_annotations))
+
     def save_preds(self, vid_cap, idx, save_path):
         """Save video predictions as mp4 at specified path."""
         im0_list = self.plotted_img
@@ -360,6 +395,15 @@ class BasePredictor:
             im0[np.any(color_mask2 != [0, 0, 0], axis=-1)] = (1 - alpha) * im0[
                 np.any(color_mask2 != [0, 0, 0], axis=-1)] + alpha * color_mask2[
                                                                  np.any(color_mask2 != [0, 0, 0], axis=-1)]
+
+            import os
+            path_to_road_label = self.txt_path.replace("labels/", "labels/drivable/")
+            os.makedirs(os.path.dirname(path_to_road_label), exist_ok=True)
+            self.mask_to_yolo_polygon(mask1, path_to_road_label + ".txt", class_id=5)
+
+            path_to_road_label = self.txt_path.replace("labels/", "labels/lane/")
+            os.makedirs(os.path.dirname(path_to_road_label), exist_ok=True)
+            self.mask_to_yolo_polygon(mask2, path_to_road_label + ".txt", class_id=6)
 
             # Save the final image
             cv2.imwrite(save_path, im0)
