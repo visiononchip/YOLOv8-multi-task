@@ -327,7 +327,7 @@ class BaseTrainer:
                 ######Jiayuan
                 # pbar = tqdm(enumerate(self.train_loader), total=nb, bar_format=TQDM_BAR_FORMAT)
                 # ncols will control the width for tqdm. it should be larger than original. Otherwise, it can not display fully.
-                pbar = tqdm(enumerate(self.train_loader), total=nb, ncols=100, bar_format=TQDM_BAR_FORMAT)
+                pbar = tqdm(enumerate(self.train_loader), total=nb, ncols=300, bar_format=TQDM_BAR_FORMAT)
                 ######
             self.tloss = None
             self.optimizer.zero_grad()
