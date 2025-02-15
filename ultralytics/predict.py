@@ -1,9 +1,16 @@
 import sys
-sys.path.insert(0, "/home/ubuntu/voc-us-west/YOLOv8-multi-task/ultralytic")
+import os
+
+project_root = os.path.dirname(__file__) + "/../../"
+project_root = os.path.abspath(project_root)
+source_root = os.path.dirname(__file__) + "/../"
+source_root = os.path.abspath(source_root)
+
+sys.path.insert(0, source_root+"/ultralytics")
 
 from ultralytics import YOLO
 
 
 number = 3 #input how many tasks in your work
-model = YOLO('/home/ubuntu/voc-us-west/YOLOv8-multi-task/runs/multi/train_demo_output7/weights/best.pt')  # Validate the model
-model.predict(source='/home/ubuntu/voc-us-west/train_test/images/val2017', imgsz=(384,672), device=[0],name='predict_demo', save=True, conf=0.25, iou=0.45, show_labels=False, save_txt=True)
+model = YOLO(source_root+'/runs/multi/train_finetune_output/weights/best.pt')  # Validate the model
+model.predict(source=project_root+'/dataset/voc-adas-yolo/images/val2017', imgsz=(384,672), device=[0],name='predict_demo', save=True, conf=0.25, iou=0.45, show_labels=False, save_txt=True)
