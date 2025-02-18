@@ -11,8 +11,8 @@ import os
 # logging.getLogger('ultralytics').setLevel(logging.ERROR)
 
 if __name__ == "__main__":
-    model_path = "best.pt"
-    val_path = "PATH to VAL2017"
+    model_path = "/home/ubuntu/YOLOv8-multi-task/runs/multi/train_finetune_output/weights/best.pt"
+    val_path = "/ephemeral/work/voc-adas-yolo/images/val2017"
     # Load the YOLO model
     model = YOLO(model_path , task='multi')
     frame_count = len(os.listdir(val_path))
@@ -21,19 +21,12 @@ if __name__ == "__main__":
 
     # Set up dummy input for FLOPs calculation
     dummy_in = torch.randn(1, 3, 1088, 1088).to(device)
-    flops, params = profile(model.model, inputs=(dummy_in,))
-
-    results = model.val(data="DATASET YAML", imgsz=1088, device=[0], conf=0.25, iou=0.45, half=False, show_labels=False, save=False, show=False, save_txt=True)
-
-    inference_time = results[0].speed['preprocess'] + results[0].speed['inference'] + results[0].speed['loss'] + results[0].speed['postprocess']
-
-    total_inference_ms = (frame_count * inference_time) / 1000 # convert ms to seconds and multiply with total number of frames
-
-    overall_fps = frame_count / total_inference_ms if total_inference_ms > 0 else 0
+    mac, params = profile(model.model, inputs=(dummy_in,))
 
     # Compute TOPS (Tera Operations Per Second)
-    tops = (frame_count * flops / total_inference_ms) / 1e12
+    flop = mac * 2
+    tops = (flop) / 1e12
+    tops_at_30fps = (30 * tops)
 
-    tops_at_30fps = tops * 30 / overall_fps
-
+    print(f'MACs: {mac:.2f}')
     print(f'TOPS @ 30FPS: {tops_at_30fps:.2f}')
