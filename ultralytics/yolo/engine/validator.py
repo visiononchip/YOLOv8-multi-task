@@ -235,6 +235,9 @@ class BaseValidator:
             with dt[1]:
                 if self.args.task == 'multi':
                     preds_list = model(batch[0]['img'])
+                    if preds_list[1].shape == torch.Size([1, 1088, 1088, 2]):
+                        preds_list[1] = preds_list[1].permute(0, 3, 1, 2)
+                        preds_list[2] = preds_list[2].permute(0, 3, 1, 2)
                 else:
                     preds = model(batch['img'])
 
