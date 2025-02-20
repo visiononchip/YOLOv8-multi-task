@@ -15,7 +15,7 @@ from ultralytics import YOLO
 model = YOLO(source_root+'/runs/multi/train_finetune_output/weights/best.pt')  # 加载自己训练的模型# Validate the model
 # metrics = model.val(data='/home/jiayuan/ultralytics-main/ultralytics/datasets/bdd-multi.yaml',device=[4],task='multi',name='v3-model-val',iou=0.6,conf=0.001, imgsz=(640,640),classes=[2,3,4,9,10,11],combine_class=[2,3,4,9],single_cls=True)  # no arguments needed, dataset and settings remembered
 
-metrics = model.val(data=source_root+'/ultralytics/datasets/bdd-multi-voc-finetune.yaml',device=[0],task='multi',name='val',iou=0.6,conf=0.001, imgsz=(640,640),classes=[0,1,2,3,4,5,6],combine_class=[],single_cls=False)  # no arguments needed, dataset and settings remembered
+metrics = model.val(data=source_root+'/ultralytics/datasets/bdd-multi-voc-finetune.yaml',device=[0],task='multi',name='val',iou=0.6,conf=0.001, imgsz=1088,classes=[0,1,2,3,4,5,6],combine_class=[],single_cls=False)  # no arguments needed, dataset and settings remembered
 # for i in range(number):
 #     print(f'This is for {i} work')
 #     print(metrics[i].box.map)    # map50-95
