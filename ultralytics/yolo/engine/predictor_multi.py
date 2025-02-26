@@ -251,12 +251,16 @@ class BasePredictor:
             with profilers[1]:
                 preds = self.model(im, augment=self.args.augment, visualize=visualize)
 
+                if preds[1].shape == torch.Size([1, 1088, 1088, 2]):
+                    preds[1] = preds[1].permute(0, 3, 1, 2)
+                    preds[2] = preds[2].permute(0, 3, 1, 2)
+
             # Postprocess
             with profilers[2]:
                 if self.args.task == 'multi':
                     self.results = []
                     for i, pred in enumerate(preds):
-                        if isinstance(pred, tuple):
+                        if isinstance(pred, tuple) or len(pred.shape) == 3:
                             pred = self.postprocess_det(pred, im, im0s)
                             self.results.append(pred)
                         else:
@@ -383,8 +387,14 @@ class BasePredictor:
             mask2 = im0_list[2][0].to(torch.uint8).cpu().numpy()
 
             im0_h, im0_w, _ = im0.shape
-            mask1 = mask1[14:-14, :]
-            mask2 = mask2[14:-14, :]
+            if mask1.shape[0] == mask1.shape[1]:
+                # For TFLite 1080P
+                mask1 = mask1[238:-238, :]
+                mask2 = mask2[238:-238, :]
+            else:
+                # For Torch 1080P
+                mask1 = mask1[14:-14, :]
+                mask2 = mask2[14:-14, :]
             mask1 = cv2.resize(mask1, (im0_w, im0_h), cv2.INTER_CUBIC)
             mask2 = cv2.resize(mask2, (im0_w, im0_h), cv2.INTER_CUBIC)
 

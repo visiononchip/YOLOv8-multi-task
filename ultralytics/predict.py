@@ -12,5 +12,5 @@ from ultralytics import YOLO
 
 
 number = 3 #input how many tasks in your work
-model = YOLO(source_root+'/runs/multi/train_finetune_output/weights/best.pt')  # Validate the model
+model = YOLO(project_root+'/pretrained/ayolom-voc-1080-fine-20250218.tflite', task='multi')  # Validate the model
 model.predict(source=project_root+'/dataset/voc-adas-yolo/images/val2017', imgsz=1088, device=[0],name='predict_demo', save=True, conf=0.25, iou=0.45, show_labels=False, save_txt=True)
