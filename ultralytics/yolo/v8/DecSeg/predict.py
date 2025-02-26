@@ -31,7 +31,6 @@ class MultiPredictor(BasePredictor):
     def postprocess_seg(self, preds):
         """Postprocesses YOLO predictions and returns output detections with proto."""
         #preds = torch.nn.functional.interpolate(preds, size=(720, 1280), mode='bilinear', align_corners=False) # For 720p Images
-        preds = torch.nn.functional.interpolate(preds, size=(1080, 1920), mode='bilinear', align_corners=False) # For 1080p Images
         preds = self.sigmoid(preds)
         _, preds = torch.max(preds, 1)
         return preds

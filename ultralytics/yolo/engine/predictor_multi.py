@@ -382,6 +382,12 @@ class BasePredictor:
             mask1 = im0_list[1][0].to(torch.uint8).cpu().numpy()
             mask2 = im0_list[2][0].to(torch.uint8).cpu().numpy()
 
+            im0_h, im0_w, _ = im0.shape
+            mask1 = mask1[14:-14, :]
+            mask2 = mask2[14:-14, :]
+            mask1 = cv2.resize(mask1, (im0_w, im0_h), cv2.INTER_CUBIC)
+            mask2 = cv2.resize(mask2, (im0_w, im0_h), cv2.INTER_CUBIC)
+
             # Convert mask to RGB
             color_mask1 = np.stack([mask1 * 0, mask1 * 255, mask1 * 0], axis=-1)
             color_mask2 = np.stack([mask2 * 255, mask2 * 0, mask2 * 0], axis=-1)
