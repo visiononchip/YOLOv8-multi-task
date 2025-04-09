@@ -405,12 +405,12 @@ class BasePredictor:
             alpha = 0.5  # transparency factor
 
             # Overlay masks on im0 with transparency
-            im0[np.any(color_mask1 != [0, 0, 0], axis=-1)] = (1 - alpha) * im0[
-                np.any(color_mask1 != [0, 0, 0], axis=-1)] + alpha * color_mask1[
-                                                                 np.any(color_mask1 != [0, 0, 0], axis=-1)]
-            im0[np.any(color_mask2 != [0, 0, 0], axis=-1)] = (1 - alpha) * im0[
-                np.any(color_mask2 != [0, 0, 0], axis=-1)] + alpha * color_mask2[
-                                                                 np.any(color_mask2 != [0, 0, 0], axis=-1)]
+            #im0[np.any(color_mask1 != [0, 0, 0], axis=-1)] = (1 - alpha) * im0[
+            #    np.any(color_mask1 != [0, 0, 0], axis=-1)] + alpha * color_mask1[
+            #                                                     np.any(color_mask1 != [0, 0, 0], axis=-1)]
+            #im0[np.any(color_mask2 != [0, 0, 0], axis=-1)] = (1 - alpha) * im0[
+            #    np.any(color_mask2 != [0, 0, 0], axis=-1)] + alpha * color_mask2[
+            #                                                     np.any(color_mask2 != [0, 0, 0], axis=-1)]
 
             import os
             path_to_road_label = self.txt_path.replace("labels/", "labels/drivable/")
